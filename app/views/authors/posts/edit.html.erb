@@ -1,0 +1,125 @@
+<div class="row">
+<div class="col-md-4">
+  <!--Button to click back to the view posts page-->
+  <%= link_to 'Back', posts_path, class: 'btn btn-secondary mb-3' %>
+  <div class="card">
+    <div class="card-header">
+      <h6 class='card-title mb-0'>Editing Clothes Review</h6>
+    </div>
+    <div class="card-body">
+      <%= render 'form', post: @post %>
+    </div>
+    <div class="card-footer">
+      <!--If the post is published the button will change to Unpublished
+       If the post is unpublished the button will appear as Publish-->
+      <% if @post.published? %>
+        <a href="#"
+          class='btn btn-secondary btn-block'
+          data-reflex='click->PublisherReflex#unpublish'
+          data-post-id='<%= @post.id %>'>
+          Unpublish
+        </a>
+      <% else %>
+        <a href="#"
+          class='btn btn-dark btn-block'
+          data-reflex='click->PublisherReflex#publish'
+          data-post-id='<%= @post.id %>'>
+          Publish
+        </a>
+        <% end %>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-8">
+    <div class="mb-3">
+      <!--Button that allows user to add a paragraph section to their post-->
+      <%= form_with(model: [@post, @element], html: { class: 'float-left mr-1' }) do |form| %>
+        <%= form.hidden_field :element_type, value: 'paragraph' %>
+        <%= form.submit "Paragraph", class: "btn btn-dark" %>
+      <% end %>
+      <!--Button that allows user to add an image section to their post-->
+      <%= form_with(model: [@post, @element]) do |form| %>
+        <%= form.hidden_field :element_type, value: 'image' %>
+        <%= form.submit "Image", class: "btn btn-dark" %>
+      <% end %>
+    </div>
+    <div class="card mb-5">
+      <div class="card-header text-right">
+        <!--This determines the published status, if the post is published it will say publishedand how much time time ago
+        If the post is unpublished the statuts above the post says unpublished-->
+        <%if @post.published? %>
+          <b>Published</b> <%= time_ago_in_words(@post.published_at) %> ago
+        <% else %>
+          Unpublished
+        <% end %>
+      </div>
+
+      <!--The message in the paragraph tag comes up when no paragraph or image has been added to the post-->
+        <div class="card-body pt-5" data-controller="elements">
+        <% if @post.elements.none? {|element| element.persisted? } %>
+        <div class="p-4 text-center">
+          <h2 class='text-secondary'>
+            <i class="fa-solid fa-circle-arrow-up"></i>
+          </h2>
+          <p>Click the buttons above to add information to your clothing review</p>
+        </div>
+        <% else %>
+        <!--Allows for the sorting of elements e.g dragging a paragraph above an image than was previously below the image-->
+          <ul id='elements' data-action="drop->elements#sort">
+            <% @post.elements.order(position: :asc).each do |element| %>
+              <% if element.persisted? %>
+                <li data-id="<%= element.id %>" class='element-item'>
+                <% if element.paragraph? %>
+                  <div class="mb-4 p-3 paragraph">
+                    <div class="paragraph-content">
+                      <% if element.content.present? %>
+                      <%= element.content %>
+                      <% else %>
+                      Click to add product review.
+                      <% end %>
+                    </div>
+                    <div class="paragraph-form d-none" id='element—<%= element.id %>—form'>
+                      <%= form_with(model: [@post, element]) do |form| %>
+                        <%= form.rich_text_area :content %>
+                        <div class="mt-3 d-flex justify-content-between">
+                          <div>
+                          <!--Saves the post-->
+                          <%= form.submit "Save", class: "btn btn-primary" %>
+                          <a href="#" class='cancel btn btn-secondary'>Cancel</a>
+                          </div>
+                          <!--Deletes the post-->
+                          <%= link_to 'Delete', post_element_path(@post, element), method:
+                          :delete, class: 'btn btn-danger', data: {confirm: "Are you sure?" } %>
+                        </div>
+                      <% end %>
+                  </div>
+                </div>
+                <% elsif element.image? %>
+                <div class="mb-4 p-3 image">
+                  <% if element.image.present? %>
+                    <div>
+                      <%= image_tag(element.image) %>
+                    </div>
+                    <!--Deletes the post-->
+                  <%= link_to 'Delete', post_element_path(@post, element), method:
+                  :delete, class: 'btn btn-danger mt-2', data: {confirm: "Are you sure?" } %>
+                  <% else %>
+                    <%= form_with(model: [@post, element]) do |form| %>
+                      <%= form.file_field :image %>
+                      <div class="mt-3">
+                        <%= form.submit "Save", class: "btn btn-primary" %>
+                        <a href="#" class='cancel btn btn-secondary'>Cancel</a>
+                      </div>
+                    <% end %>
+                  <% end %>
+                  </div>
+                <% end %>
+              <% end %>
+              </li>
+            <% end %>
+          </ul>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

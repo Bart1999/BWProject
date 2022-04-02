@@ -1,0 +1,35 @@
+<h4 class='d-flex justify-content-between mb-4'>
+ <span>Posts</span>
+ <!--Allows user to create a new post, takes user to the create post view-->
+ <%= link_to 'New Post', new_post_path, class: 'btn btn-primary' %>
+</h4>
+
+<% @posts.each do |post| %>
+  <%= link_to edit_post_path(post), class: 'text-decoration-none' do %>
+      <div class="card mb-3 post-card">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-2">
+              <!--Allows user to add a header image for their post-->
+              <% if post.header_image.present? %>
+              <div class="header_img" style ="background-image: url(<%=
+               url_for(post.header_image) %>);"></div>
+              <% end %>
+            </div>
+            <div class="col_md-10">
+              <!--Displays the status of the post whether it's published or not-->
+              <% if post.published? %>
+              <span class='badge badge-primary'>Published</span>
+              <% else %>
+              <span class='badge badge-secondary'>Unpublished</span>
+              <% end %>
+              <!--Used for the post title-->
+              <h5 class='card-title mb-1 text-dark'><%= post.title %></h5>
+              <!--Used for the post description-->
+              <p class='text-secondary mb-0'><%= post.description %></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
+<% end %>
