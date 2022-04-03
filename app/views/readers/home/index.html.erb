@@ -1,0 +1,21 @@
+<h1>Welcome to BW Labels</h1>
+<h4>The website where you can review clothes</h4>
+<div class="row">
+  <% @posts.each do |post| %>
+    <div class="col-md-6 col-lg-4">
+      <div class="card post-card">
+        <!--Shows the post header image but it's shown in the style of a background image-->
+        <div class="header-image" style="background-image: url(<%= url_for(post.header_image) %>)">
+        </div>
+        <div class="card-body d-flex flex-column">
+          <!--Shows the post title-->
+          <h5 class="card-title"><%= post.title %></h5>
+          <!--Shows the text/paragraph information from the post-->
+          <p class="card-text"><%= truncate(post.description, length: 250) %></p>
+          <!--Button that allows user to click into the post view-->
+          <%= link_to "Read Post", blog_post_path(post), class: 'btn btn-primary mt-auto' %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>
