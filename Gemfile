@@ -12,6 +12,7 @@ gem 'rails', '~> 6.1.4', '>= 6.1.4.6'
 gem 'puma', '~> 5.0'
 # Use sqlite3 as the database for Active Record
 gem 'sqlite3', '~> 1.4'
+# gem 'pg', '~> 1.3.3'
 # Use SCSS for stylesheets
 gem 'sass-rails', '>= 6'
 # Transpile app-like JavaScript. Read more: https://github.com/rails/webpacker
