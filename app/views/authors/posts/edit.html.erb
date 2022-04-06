@@ -64,7 +64,7 @@
           <p>Click the buttons above to add information to your clothing review</p>
         </div>
         <% else %>
-        <!--Allows for the sorting of elements e.g dragging a paragraph above an image than was previously below the image-->
+        <!--(Stimulus Reflex Gem)Allows for the sorting of elements e.g dragging a paragraph above an image than was previously below the image-->
           <ul id='elements' data-action="drop->elements#sort">
             <% @post.elements.order(position: :asc).each do |element| %>
               <% if element.persisted? %>
